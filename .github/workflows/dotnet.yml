@@ -20,7 +20,7 @@ jobs:
       run: dotnet restore
     - name: Pack
       run: |
-          export VERSION=$(grep \"version\" package.json | grep -o [0-9.]*)
+          export VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]')
           echo $VERSION
           dotnet build --no-restore -c release
           dotnet pack --no-restore -c release -o ./publish -p:Version=$VERSION
