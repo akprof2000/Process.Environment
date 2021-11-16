@@ -23,7 +23,7 @@ jobs:
     - name: Build
       run: dotnet build --no-restore -c release
     - name: SetVersion
-      run: echo "VERSION=$(cat package.json grep version head -1 awk -F:'{ print $2 }' sed 's/[",]//g' tr -d '[[:space:]]')" >> $GITHUB_ENV
+      run: echo "VERSION=$(grep \"version\" package.json | grep -o [0-9.]*)" >> $GITHUB_ENV
     - name: Version
       run: echo $VERSION
     - name: Pack
