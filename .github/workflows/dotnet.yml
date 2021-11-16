@@ -16,19 +16,19 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0.x
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore -c release
     - name: Version
-      run: export VERSION=$(cat package.json grep version head -1 awk -F:'{ print $2 }' sed 's/[",]//g' tr -d '[[:space:]]'
+      run: export VERSION=$(cat package.json grep version head -1 awk -F:'{ print $2 }' sed 's/[",]//g' tr -d '[[:space:]]')
     - name: Pack
       run: dotnet pack --no-restore -c release -o ./publish -p:Version=$VERSION
     - name: Nuget Library Deploy
       uses: EasyDesk/job-nuget-library-deploy@v1.0.0
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0.x
         nuget-api-key: oy2hyiv5gjfjx6bm5jaafsltakdidbjezjndo6evrewkhq        
         publish-dir: ./publish
 
