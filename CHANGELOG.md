@@ -1,3 +1,12 @@
+## [1.0.4](https://github.com/akprof2000/Process.Environment/compare/v1.0.3...v1.0.4) (2021-12-25)
+
+
+### Bug Fixes
+
+* сборка в гит хабе истек ключ ([760e5b4](https://github.com/akprof2000/Process.Environment/commit/760e5b40454bb3353df64747c28bac43cb295a5b))
+
+
+
 ## [1.0.3](https://github.com/akprof2000/Process.Environment/compare/v1.0.2...v1.0.3) (2021-12-25)
 
 
