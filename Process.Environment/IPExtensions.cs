@@ -35,13 +35,23 @@ namespace Process.Environment
             return user?.Claims?.FirstOrDefault(i => i.Type == "SessionId")?.Value;
         }
 
+
+        /// <summary>
+        /// Gets the user agent.
+        /// </summary>
+        /// <param name="Request">The request.</param>
+        /// <returns></returns>
+        public static string GetUserAgent(this HttpRequest Request)
+        {
+            return Request?.Headers?["User-Agent"] ?? "";
+        }
+
         /// <summary>
         /// Gets the request ip.
         /// </summary>
         /// <param name="Request">The request.</param>
         /// <param name="tryUseXForwardHeader">if set to <c>true</c> [try use x forward header].</param>
         /// <returns></returns>
-        /// <exception cref="Exception">Unable to determine caller's IP.</exception>
         public static string GetRequestIP(this HttpRequest Request, bool tryUseXForwardHeader = true)
         {
             if (Request == null)
@@ -54,7 +64,7 @@ namespace Process.Environment
 
             if (tryUseXForwardHeader)
             {
-                List<string> strs = GetHeaderValueAs<string>(Request, "X-Forwarded-For").SplitCsv();
+                List<string> strs = GetHeaderValueAs(Request, "X-Forwarded-For").SplitCsv();
                 if (strs == null)
                 {
                     return null;
@@ -67,16 +77,16 @@ namespace Process.Environment
             }
 
 
-            if (ip.IsNullOrWhitespace() && Request?.HttpContext?.Connection?.RemoteIpAddress != null)
+            if (ip.IsNullOrWhitespace() && Request.HttpContext?.Connection?.RemoteIpAddress != null)
             {
                 ip = Request.HttpContext.Connection.RemoteIpAddress.ToString();
 
             }
 
-            if (ip.IsNullOrWhitespace())
+            if (ip.IsNullOrWhitespace() && Request.HttpContext?.Features != null)
             {
 
-                string ipt = Request?.HttpContext.Features.Get<IHttpConnectionFeature>()?.RemoteIpAddress?.ToString();
+                string ipt = Request.HttpContext.Features.Get<IHttpConnectionFeature>()?.RemoteIpAddress?.ToString();
                 if (!ipt.IsNullOrWhitespace() && (ip.IsNullOrWhitespace() || string.Compare(ip, ipt, true, CultureInfo.InvariantCulture) != 0))
                 {
                     ip = ipt;
@@ -85,7 +95,7 @@ namespace Process.Environment
 
             if (ip.IsNullOrWhitespace())
             {
-                string ipt = GetHeaderValueAs<string>(Request, "REMOTE_ADDR");
+                string ipt = GetHeaderValueAs(Request, "REMOTE_ADDR");
                 if (!ipt.IsNullOrWhitespace() && (ip.IsNullOrWhitespace() || string.Compare(ip, ipt, true, CultureInfo.InvariantCulture) != 0))
                 {
                     ip = ipt;
@@ -96,27 +106,22 @@ namespace Process.Environment
         }
 
 
+
         /// <summary>
         /// Gets the header value as.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="Request">The request.</param>
         /// <param name="headerName">Name of the header.</param>
         /// <returns></returns>
-        private static T GetHeaderValueAs<T>(HttpRequest Request, string headerName)
+        private static string GetHeaderValueAs(HttpRequest Request, string headerName)
         {
             StringValues values = "";
 
-            if (Request?.HttpContext?.Request?.Headers?.TryGetValue(headerName, out values) ?? false)
+            if (Request.HttpContext?.Request?.Headers?.TryGetValue(headerName, out values) ?? false)
             {
-                string rawValues = values.ToString();   // writes out as Csv when there are multiple.
-
-                if (!rawValues.IsNullOrWhitespace())
-                {
-                    return (T)Convert.ChangeType(values.ToString(), typeof(T), CultureInfo.InvariantCulture);
-                }
+                return values.ToString();
             }
-            return default;
+            return "";
         }
     }
 
