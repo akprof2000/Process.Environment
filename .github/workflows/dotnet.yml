@@ -27,6 +27,6 @@ jobs:
       uses: EasyDesk/job-nuget-library-deploy@v1.0.0
       with:
         dotnet-version: 6.x
-        nuget-api-key: oy2hyiv5gjfjx6bm5jaafsltakdidbjezjndo6evrewkhq        
+        nuget-api-key: oy2mcvzxqblquqny6keac46re4i24qoutk3e56uf253lye
         publish-dir: ./publish
 
