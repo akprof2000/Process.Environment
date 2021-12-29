@@ -24,9 +24,11 @@ jobs:
           dotnet build --no-restore -c release
           dotnet pack --no-restore -c release -o ./publish -p:Version=$VERSION
     - name: Nuget Library Deploy
+      env: 
+        NUGET_TOKEN: ${{ secrets.NUGET_KEY_SECRETE }}
       uses: EasyDesk/job-nuget-library-deploy@v1.0.0
       with:
         dotnet-version: 6.x
-        nuget-api-key: oy2mcvzxqblquqny6keac46re4i24qoutk3e56uf253lye
+        nuget-api-key: env.NUGET_TOKEN
         publish-dir: ./publish
 
