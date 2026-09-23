@@ -4,6 +4,8 @@ name: Prune releases
 # раз в неделю и по кнопке удаляются более старые релизы. Черновики не
 # трогаются. Теги остаются (DELETE_TAGS: "true" — удалять и их).
 on:
+  release:
+    types: [published]
   schedule:
     - cron: "37 3 * * 1"
   workflow_dispatch:
